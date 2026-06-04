@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "语雀 → Obsidian 迁移"
+  short_description: "将语雀知识库迁移到 Obsidian，含表格和图片"
+  default_prompt: "Use $yuque-to-obsidian to migrate my Yuque knowledge bases at https://www.yuque.com/{user}/{slug} to my Obsidian vault."
+policy:
+  allow_implicit_invocation: true
