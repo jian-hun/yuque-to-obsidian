@@ -115,3 +115,32 @@ obsidian_vault/
 ## 📄 开源协议
 
 MIT
+
+
+## 🧠 实战经验
+
+这个 skill 在迁移 9 个知识库、351 篇文档的过程中踩过这些坑：
+
+### 1. 新旧文档 ID 不兼容
+早期文档的 TOC 中用 `id` 而非 `doc_id`，直接取 `doc.doc_id` 会得到 undefined。
+> 解决：使用 `doc.doc_id || doc.id`
+
+### 2. 企业空间 302 跳转
+部分文档属于企业组织（如 hlwcpyfzx.yuque.com），API 返回 302 重定向。
+> 解决：跟随 Location 头，重新 PUT 到新 hostname
+
+### 3. 文档内容在 body_draft
+部分文档的正文存在 `body_draft` 而非 `body` 中。
+> 解决：优先用 `data.body_draft || data.body`
+
+### 4. 在线表格是压缩二进制
+lakesheet 格式的 sheet 字段是 zlib 压缩数据，直接输出是乱码。
+> 解决：用 Buffer + charCodeAt + inflateSync 解压
+
+### 5. TITLE 层级不能只靠 parent_uuid
+TITLE 之间的嵌套由 `level` 字段决定，仅用 parent_uuid 会丢失层级。
+> 解决：先按 level 构建 TITLE 树，再挂 DOC
+
+### 6. 空分组不应创建文件夹
+TITLE 有 0 个子文档时应跳过，否则产生空目录。
+> 解决：`if (group.children.length === 0) continue;`
